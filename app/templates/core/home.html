@@ -1,1 +1,525 @@
-<h1>Home Page</h1>
+{% extends "base.html" %}
+
+{% block title %}EasyCRM - Dashboard{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: #f8fafc;
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .dashboard-container {
+        padding: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 32px;
+    }
+    
+    .dashboard-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.025em;
+    }
+    
+    .dashboard-subtitle {
+        color: #64748b;
+        font-size: 16px;
+        margin: 0;
+        font-weight: 400;
+    }
+    
+    /* Métricas principales */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .metric-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        position: relative;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .metric-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
+    
+    .metric-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    
+    .metric-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .metric-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    
+    .metric-contacts { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .metric-orgs { background: linear-gradient(135deg, #10b981, #047857); }
+    .metric-recent { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .metric-growth { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    
+    .metric-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+        line-height: 1;
+    }
+    
+    .metric-change {
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .metric-change.positive {
+        color: #059669;
+    }
+    
+    .metric-change.neutral {
+        color: #64748b;
+    }
+    
+    .main-content {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .chart-section {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+    
+    .chart-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .time-filter {
+        display: flex;
+        background: #f1f5f9;
+        border-radius: 8px;
+        padding: 4px;
+    }
+    
+    .time-filter button {
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .time-filter button.active {
+        background: white;
+        color: #1e293b;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chart-placeholder {
+        height: 300px;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 16px;
+        border: 2px dashed #cbd5e1;
+    }
+    
+    /* Panel lateral */
+    .sidebar-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .quick-actions-panel,
+    .recent-activity-panel {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .panel-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 20px 0;
+    }
+    
+    .quick-action {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #374151;
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+    
+    .quick-action:hover {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        text-decoration: none;
+        color: #1e293b;
+    }
+    
+    .quick-action-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 14px;
+        color: white;
+    }
+    
+    .action-contact { background: #3b82f6; }
+    .action-org { background: #10b981; }
+    .action-view-contacts { background: #8b5cf6; }
+    .action-view-orgs { background: #f59e0b; }
+    
+    .quick-action-text {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 12px;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-text {
+        font-size: 14px;
+        color: #374151;
+        margin: 0 0 4px 0;
+    }
+    
+    .activity-time {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+    
+    /* Tabla de contactos recientes */
+    .recent-contacts-table {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .table-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table th {
+        text-align: left;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .table td {
+        padding: 16px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
+        color: #374151;
+    }
+    
+    .table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .contact-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 12px;
+    }
+    
+    .contact-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .contact-name {
+        font-weight: 500;
+        color: #1e293b;
+    }
+    
+    .contact-email {
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+    
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .status-inactive {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    @media (max-width: 1024px) {
+        .main-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .metrics-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 16px;
+        }
+        
+        .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .metric-card {
+            padding: 20px;
+        }
+        
+        .chart-section,
+        .quick-actions-panel,
+        .recent-activity-panel,
+        .recent-contacts-table {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Panel lateral -->
+        <div class="sidebar-panel">
+            <!-- Acciones rápidas -->
+            <div class="quick-actions-panel">
+                <h3 class="panel-title">Acciones Rápidas</h3>
+                <a href="{{ url_for('core.create_contact') }}" class="quick-action">
+                    <div class="quick-action-icon action-contact">+</div>
+                    <div class="quick-action-text">Crear Contacto</div>
+                </a>
+                <a href="{{ url_for('core.create_organisation') }}" class="quick-action">
+                    <div class="quick-action-icon action-org">+</div>
+                    <div class="quick-action-text">Crear Organización</div>
+                </a>
+                <a href="{{ url_for('core.list_contacts') }}" class="quick-action">
+                    <div class="quick-action-icon action-view-contacts">👥</div>
+                    <div class="quick-action-text">Ver Contactos</div>
+                </a>
+                <a href="{{ url_for('core.list_organisations') }}" class="quick-action">
+                    <div class="quick-action-icon action-view-orgs">🏢</div>
+                    <div class="quick-action-text">Ver Organizaciones</div>
+                </a>
+            </div>
+            
+            <!-- Actividad reciente -->
+            <div class="recent-activity-panel">
+                <h3 class="panel-title">Actividad Reciente</h3>
+                {% if recent_activity %}
+                    {% for activity in recent_activity %}
+                    <div class="activity-item">
+                        <div class="activity-avatar">{{ activity[0]|upper }}</div>
+                        <div class="activity-content">
+                            <div class="activity-text">{{ activity }}</div>
+                            <div class="activity-time">Hace 2 horas</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="activity-item">
+                        <div class="activity-avatar">👋</div>
+                        <div class="activity-content">
+                            <div class="activity-text">¡Bienvenido a EasyCRM!</div>
+                            <div class="activity-time">Ahora</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-avatar">🚀</div>
+                        <div class="activity-content">
+                            <div class="activity-text">Sistema inicializado</div>
+                            <div class="activity-time">Hace 1 minuto</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Sección de gráficos -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <h3 class="chart-title">Crecimiento de Contactos</h3>
+                <div class="time-filter">
+                    <button>7D</button>
+                    <button class="active">30D</button>
+                    <button>90D</button>
+                    <button>1A</button>
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                📊 Gráfico de tendencias - Próximamente
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabla de contactos recientes -->
+    <div class="recent-contacts-table">
+        <div class="table-header">
+            <h3 class="panel-title">Contactos Recientes</h3>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Contacto</th>
+                    <th>Organización</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="contact-info">
+                            <div class="contact-avatar">JD</div>
+                            <div class="contact-details">
+                                <div class="contact-name">Usuario Demo</div>
+                                <div class="contact-email">demo@ejemplo.com</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>EasyCRM</td>
+                    <td><span class="status-badge status-active">Activo</span></td>
+                    <td>Hoy</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

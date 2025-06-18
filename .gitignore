@@ -1,5 +1,7 @@
 # Database files
 *.db
+app.db
+test.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -13,6 +15,9 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+venv/
+.venv/
+ENV/
 build/
 develop-eggs/
 dist/
@@ -48,6 +53,7 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+.pytest_cache/
 
 # Translations
 *.mo
@@ -56,11 +62,64 @@ coverage.xml
 # Django stuff:
 *.log
 
+# Flask stuff:
+instance/
+.webassets-cache
+
 # Sphinx documentation
 docs/_build/
 
 # PyBuilder
 target/
 
-#Ipython Notebook
+# Ipython Notebook
 .ipynb_checkpoints
+
+# Virtual environments
+venv/
+.venv/
+virtualenv/
+ENV/
+env/
+.env
+.env.local
+.env.production
+.env.staging
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Flask migrations (optional - uncomment if you don't want to track migrations)
+# migrations/
+
+# Custom application files
+uploads/
+logs/
+tmp/
+
+# Node modules (if using any frontend build tools)
+node_modules/
+npm-debug.log*
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Application specific
+config_local.py
+instance_config.py

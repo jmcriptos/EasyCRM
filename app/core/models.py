@@ -1,7 +1,8 @@
 from sqlalchemy_utils import EmailType, ChoiceType
 from sqlalchemy.exc import IntegrityError
 
-from app.database import db
+from app.database import db, Base
+
 
 
 class Base(db.Model):
@@ -48,7 +49,7 @@ class Organisation(Base):
     type = db.Column(ChoiceType(TYPE_CHOICE), nullable=False)
     address = db.Column(db.Text(180))
 
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     contacts = db.relationship('Contact', backref='organisation')
     activities = db.relationship('Activity', backref='contact_lookup')

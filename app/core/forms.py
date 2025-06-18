@@ -1,5 +1,5 @@
 from wtforms_alchemy import ModelForm
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms_sqlalchemy.fields import QuerySelectField
 
 from app.core.models import Contact, Organisation
 
