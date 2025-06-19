@@ -5,7 +5,7 @@
 {% block head %}
 <style>
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #f8fafc;
         min-height: 100vh;
     }
     
@@ -17,35 +17,35 @@
     }
     
     .page-header {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 30px;
         margin-bottom: 30px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         text-align: center;
+        animation: slideIn 0.6s ease-out;
     }
     
     .page-header h1 {
-        color: #4a5568;
+        color: #1e293b;
         font-size: 2.2em;
         margin-bottom: 10px;
         font-weight: 700;
     }
     
     .page-header p {
-        color: #718096;
+        color: #64748b;
         font-size: 1.1em;
     }
     
     .organisations-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 30px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        animation: slideIn 0.6s ease-out;
     }
     
     .organisations-grid {
@@ -56,23 +56,30 @@
     }
     
     .organisation-card {
-        background: rgba(255, 255, 255, 0.8);
+        background: white;
         border: 2px solid #e2e8f0;
-        border-radius: 15px;
+        border-radius: 12px;
         padding: 25px;
         transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
     
     .organisation-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6;
+        text-decoration: none;
+        color: inherit;
     }
     
     .organisation-name {
         font-size: 1.4em;
         font-weight: 600;
-        color: #4a5568;
+        color: #1e293b;
         margin-bottom: 15px;
         display: flex;
         align-items: center;
@@ -80,15 +87,16 @@
     }
     
     .organisation-info {
-        color: #718096;
+        color: #64748b;
         margin-bottom: 8px;
         display: flex;
         align-items: flex-start;
         gap: 8px;
+        font-size: 0.95em;
     }
     
     .organisation-type {
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: #3b82f6;
         color: white;
         padding: 4px 12px;
         border-radius: 20px;
@@ -96,11 +104,13 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        display: inline-block;
+        margin-bottom: 10px;
     }
     
     .contacts-count {
         background: #e2e8f0;
-        color: #4a5568;
+        color: #1e293b;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.85em;
@@ -112,7 +122,7 @@
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #718096;
+        color: #64748b;
     }
     
     .empty-state .icon {
@@ -124,7 +134,7 @@
     .empty-state h3 {
         font-size: 1.5em;
         margin-bottom: 10px;
-        color: #4a5568;
+        color: #1e293b;
     }
     
     .empty-state p {
@@ -132,7 +142,7 @@
     }
     
     .add-organisation-btn {
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: #3b82f6;
         color: white;
         text-decoration: none;
         padding: 15px 30px;
@@ -140,11 +150,14 @@
         font-weight: 600;
         display: inline-block;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .add-organisation-btn:hover {
+        background: #2563eb;
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         text-decoration: none;
         color: white;
     }
@@ -159,8 +172,34 @@
     }
     
     .organisations-count {
-        color: #4a5568;
+        color: #1e293b;
         font-weight: 600;
+        font-size: 1.1em;
+    }
+    
+    .brand-logo {
+        width: 50px;
+        height: 50px;
+        background: #3b82f6;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     @media (max-width: 768px) {
@@ -172,6 +211,10 @@
             flex-direction: column;
             align-items: stretch;
         }
+        
+        .organisations-page {
+            padding: 15px;
+        }
     }
 </style>
 {% endblock %}
@@ -179,7 +222,8 @@
 {% block content %}
 <div class="organisations-page">
     <div class="page-header">
-        <h1>🏢 Lista de Organizaciones</h1>
+        <div class="brand-logo">🏢</div>
+        <h1>Lista de Organizaciones</h1>
         <p>Gestiona y visualiza todas tus organizaciones</p>
     </div>
     
@@ -196,7 +240,7 @@
         {% if organisations %}
             <div class="organisations-grid">
                 {% for org in organisations %}
-                <div class="organisation-card">
+                <a href="{{ url_for('core.view_organisation', org_id=org.id) }}" class="organisation-card">
                     <div class="organisation-name">
                         🏢 {{ org.name }}
                     </div>
@@ -216,7 +260,7 @@
                             👥 {{ org.contacts|length }} contacto{% if org.contacts|length != 1 %}s{% endif %}
                         </div>
                     {% endif %}
-                </div>
+                </a>
                 {% endfor %}
             </div>
         {% else %}
