@@ -1,5 +1,6 @@
 # app/__init__.py
 from flask import Flask
+from flask_login import current_user
 
 from config import BaseConfig
 from app.extensions import bcrypt, login_manager, db, migrate
@@ -12,6 +13,7 @@ def create_app(config_class: type = BaseConfig) -> Flask:
 
     _register_extensions(app)
     _register_blueprints(app)
+    _register_context_processors(app)  # ← AGREGAR ESTA LÍNEA
 
     return app
 
@@ -43,5 +45,15 @@ def _register_blueprints(app: Flask) -> None:
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(core_blueprint)
+
+
+# ------------------------------------------------------------------
+# Context Processors
+# ------------------------------------------------------------------
+def _register_context_processors(app: Flask) -> None:
+    """Registra procesadores de contexto para templates."""
+    @app.context_processor
+    def inject_user():
+        return dict(current_user=current_user)
 
 

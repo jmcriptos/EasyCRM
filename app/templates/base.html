@@ -19,9 +19,11 @@
         }
         
         .navbar {
-            background: #4a5568;
+            background: linear-gradient(135deg, #4a5568, #2d3748);
             padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 1000;
         }
         
         .navbar-content {
@@ -50,16 +52,264 @@
             align-items: center;
         }
         
+        .user-info {
+            position: relative;
+            color: white;
+            font-size: 0.9em;
+            margin-right: 15px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .user-info strong {
+            font-weight: 600;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+        
+        .user-info:hover .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .dropdown-header .user-name {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 3px;
+        }
+        
+        .dropdown-header .user-role {
+            color: #64748b;
+            font-size: 0.8em;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+        
+        .dropdown-item:first-of-type {
+            border-radius: 0;
+        }
+        
+        .dropdown-item:last-of-type {
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+            color: #ef4444;
+            text-decoration: none;
+        }
+        
+        .dropdown-item-icon {
+            font-size: 1.1em;
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
+        }
+        
         .navbar-nav a {
             color: white;
             text-decoration: none;
             padding: 8px 16px;
             border-radius: 6px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
         
         .navbar-nav a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        /* Menú Hamburguesa */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        /* Menú Lateral */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .side-menu.open {
+            right: 0;
+        }
+        
+        .menu-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-header h2 {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .menu-header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .menu-content {
+            padding: 20px 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-section-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 0 20px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), transparent);
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .menu-item-icon {
+            font-size: 1.2em;
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item-text {
+            font-weight: 500;
+        }
+        
+        .menu-item-description {
+            font-size: 0.8em;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9998;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
         
         main {
@@ -67,7 +317,7 @@
         }
         
         .footer {
-            background: #2d3748;
+            background: linear-gradient(135deg, #2d3748, #1a202c);
             color: white;
             text-align: center;
             padding: 20px 0;
@@ -78,18 +328,174 @@
             margin: 0;
             color: #a0aec0;
         }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .side-menu {
+                width: 300px;
+                right: -300px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: flex;
+            }
+        }
+        
+        /* Evitar que el dropdown se cierre al hacer hover sobre él */
+        .user-dropdown:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* Animaciones adicionales */
+        .menu-item {
+            opacity: 0;
+            transform: translateX(20px);
+            animation: slideInMenu 0.3s ease forwards;
+        }
+        
+        .menu-item:nth-child(1) { animation-delay: 0.1s; }
+        .menu-item:nth-child(2) { animation-delay: 0.15s; }
+        .menu-item:nth-child(3) { animation-delay: 0.2s; }
+        .menu-item:nth-child(4) { animation-delay: 0.25s; }
+        .menu-item:nth-child(5) { animation-delay: 0.3s; }
+        .menu-item:nth-child(6) { animation-delay: 0.35s; }
+        .menu-item:nth-child(7) { animation-delay: 0.4s; }
+        .menu-item:nth-child(8) { animation-delay: 0.45s; }
+        
+        @keyframes slideInMenu {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .side-menu:not(.open) .menu-item {
+            animation: none;
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Overlay del menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Menú lateral -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            {% if current_user.is_authenticated %}
+            <div style="padding: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; backdrop-filter: blur(10px); text-align: center;">
+                <div style="color: white; font-weight: 600; font-size: 1.2em; margin-bottom: 5px;">
+                    👤 {{ current_user.first_name }} {{ current_user.last_name }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="menu-content">
+            <!-- Navegación Principal -->
+            <div class="menu-section">
+                <div class="menu-section-title">📊 Principal</div>
+                <a href="{{ url_for('core.home') }}" class="menu-item">
+                    <span class="menu-item-icon">🏠</span>
+                    <div>
+                        <div class="menu-item-text">Dashboard</div>
+                        <div class="menu-item-description">Vista general del sistema</div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Gestión de Contactos -->
+            <div class="menu-section">
+                <div class="menu-section-title">👥 Contactos</div>
+                <a href="{{ url_for('core.list_contacts') }}" class="menu-item">
+                    <span class="menu-item-icon">📋</span>
+                    <div>
+                        <div class="menu-item-text">Lista de Contactos</div>
+                        <div class="menu-item-description">Ver todos los contactos</div>
+                    </div>
+                </a>
+                <a href="{{ url_for('core.create_contact') }}" class="menu-item">
+                    <span class="menu-item-icon">➕</span>
+                    <div>
+                        <div class="menu-item-text">Crear Contacto</div>
+                        <div class="menu-item-description">Agregar nuevo contacto</div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Gestión de Organizaciones -->
+            <div class="menu-section">
+                <div class="menu-section-title">🏢 Organizaciones</div>
+                <a href="{{ url_for('core.list_organisations') }}" class="menu-item">
+                    <span class="menu-item-icon">📋</span>
+                    <div>
+                        <div class="menu-item-text">Lista de Organizaciones</div>
+                        <div class="menu-item-description">Ver todas las organizaciones</div>
+                    </div>
+                </a>
+                <a href="{{ url_for('core.create_organisation') }}" class="menu-item">
+                    <span class="menu-item-icon">➕</span>
+                    <div>
+                        <div class="menu-item-text">Crear Organización</div>
+                        <div class="menu-item-description">Agregar nueva organización</div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Horarios y Visitas -->
+            <div class="menu-section">
+                <div class="menu-section-title">⏰ Horarios & Visitas</div>
+                <a href="{{ url_for('core.upcoming_visits_dashboard') }}" class="menu-item">
+                    <span class="menu-item-icon">📅</span>
+                    <div>
+                        <div class="menu-item-text">Próximas Visitas</div>
+                        <div class="menu-item-description">Dashboard de visitas programadas</div>
+                    </div>
+                </a>
+                <a href="{{ url_for('core.visits_calendar') }}" class="menu-item">
+                    <span class="menu-item-icon">🗓️</span>
+                    <div>
+                        <div class="menu-item-text">Calendario de Visitas</div>
+                        <div class="menu-item-description">Vista de calendario mensual</div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Sistema -->
+            <div class="menu-section">
+                <div class="menu-section-title">⚙️ Sistema</div>
+                <a href="/logout" class="menu-item">
+                    <span class="menu-item-icon">🔓</span>
+                    <div>
+                        <div class="menu-item-text">Cerrar Sesión</div>
+                        <div class="menu-item-description">Salir del sistema</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
     <header>
         <nav class="navbar">
             <div class="navbar-content">
-                <h1><a href="/">EasyCRM</a></h1>
+                <h1><a href="{{ url_for('core.home') }}">EasyCRM</a></h1>
                 <div class="navbar-nav">
-                    <a href="{{ url_for('core.create_contact') }}">Crear Contacto</a>
-                    <a href="{{ url_for('core.create_organisation') }}">Crear Organización</a>
-                    <a href="/logout">Cerrar Sesión</a>
+                    <!-- Botón del menú hamburguesa -->
+                    <div class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -102,5 +508,54 @@
     <footer class="footer">
         <p>&copy; 2025 EasyCRM. Hecho con ❤️</p>
     </footer>
+    
+    <script>
+        // Funcionalidad del menú hamburguesa
+        const menuToggle = document.getElementById('menuToggle');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMenu() {
+            menuToggle.classList.toggle('active');
+            sideMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevenir scroll del body cuando el menú está abierto
+            if (sideMenu.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            sideMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Event listeners
+        menuToggle.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        
+        // Cerrar menú al hacer clic en un enlace
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+        
+        // Cerrar menú con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sideMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+        
+        // Prevenir cierre del menú al hacer clic dentro de él
+        sideMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 </body>
 </html>

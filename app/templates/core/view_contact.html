@@ -1,4 +1,308 @@
-{% from 'macros.html' import display_field %}
-    {% for column in columns %}
-        {{ display_field(column, record) }}
-    {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}{{ record.first_name }} {{ record.last_name }} - EasyCRM{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .contact-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .contact-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+    }
+    
+    .contact-header h1 {
+        color: #4a5568;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .contact-subtitle {
+        color: #718096;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+    
+    .contact-details {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .detail-item {
+        padding: 15px;
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    
+    .detail-value {
+        color: #2d3748;
+        font-size: 1.1em;
+    }
+    
+    .detail-value a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .detail-value a:hover {
+        text-decoration: underline;
+    }
+    
+    .actions-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .actions-header {
+        color: #4a5568;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 20px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .action-schedule {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .action-schedule:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+        color: white;
+    }
+    
+    .action-edit {
+        background: #f7fafc;
+        color: #4a5568;
+        border-color: #e2e8f0;
+    }
+    
+    .action-edit:hover {
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .action-activities {
+        background: #f7fafc;
+        color: #4a5568;
+        border-color: #e2e8f0;
+    }
+    
+    .action-activities:hover {
+        background: #48bb78;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .schedule-info {
+        background: rgba(220, 252, 231, 0.8);
+        border: 1px solid #9ae6b4;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .schedule-info h4 {
+        color: #276749;
+        margin-bottom: 8px;
+    }
+    
+    .schedule-info p {
+        color: #2f855a;
+        font-size: 0.9em;
+    }
+    
+    .no-schedule {
+        background: rgba(254, 235, 200, 0.8);
+        border: 1px solid #f6ad55;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .no-schedule p {
+        color: #c05621;
+        margin: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .contact-container {
+            padding: 15px;
+        }
+        
+        .contact-header, .contact-details, .actions-section {
+            padding: 20px;
+        }
+        
+        .details-grid, .actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <!-- Header del contacto -->
+    <div class="contact-header">
+        <h1>👤 {{ record.first_name }} {{ record.last_name }}</h1>
+        <div class="contact-subtitle">
+            {% if record.role %}{{ record.role }}{% endif %}
+            {% if record.organisation %} • {{ record.organisation.name }}{% endif %}
+        </div>
+    </div>
+    
+    <!-- Detalles del contacto -->
+    <div class="contact-details">
+        <div class="details-grid">
+            <div class="detail-item">
+                <div class="detail-label">Nombre</div>
+                <div class="detail-value">{{ record.first_name }}</div>
+            </div>
+            
+            <div class="detail-item">
+                <div class="detail-label">Apellido</div>
+                <div class="detail-value">{{ record.last_name }}</div>
+            </div>
+            
+            {% if record.email %}
+            <div class="detail-item">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">
+                    <a href="mailto:{{ record.email }}">{{ record.email }}</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if record.mobile %}
+            <div class="detail-item">
+                <div class="detail-label">Teléfono</div>
+                <div class="detail-value">
+                    <a href="tel:{{ record.mobile }}">{{ record.mobile }}</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if record.role %}
+            <div class="detail-item">
+                <div class="detail-label">Cargo</div>
+                <div class="detail-value">{{ record.role }}</div>
+            </div>
+            {% endif %}
+            
+            {% if record.organisation %}
+            <div class="detail-item">
+                <div class="detail-label">Organización</div>
+                <div class="detail-value">
+                    <a href="{{ url_for('core.view_organisation', org_id=record.organisation.id) }}">
+                        {{ record.organisation.name }}
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Información de horarios -->
+        {% if record.order_schedule %}
+        <div class="schedule-info">
+            <h4>📅 Horarios de Recepción Configurados</h4>
+            <p>
+                <strong>Días:</strong> {{ record.order_schedule.get_available_days_display() }}<br>
+                <strong>Horario:</strong> {{ record.order_schedule.start_time.strftime('%H:%M') }} - {{ record.order_schedule.end_time.strftime('%H:%M') }}
+                {% if record.order_schedule.visit_schedules %}
+                <br><strong>Visitas programadas:</strong> {{ record.order_schedule.visit_schedules|length }}
+                {% endif %}
+            </p>
+        </div>
+        {% else %}
+        <div class="no-schedule">
+            <p>⚠️ No hay horarios de recepción configurados</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Acciones -->
+    <div class="actions-section">
+        <div class="actions-header">🔧 Acciones Disponibles</div>
+        <div class="actions-grid">
+            <a href="{{ url_for('core.manage_contact_schedule', contact_id=record.id) }}" class="action-btn action-schedule">
+                ⏰ Gestionar Horarios
+            </a>
+            
+            <a href="#" class="action-btn action-edit">
+                ✏️ Editar Contacto
+            </a>
+            
+            <a href="#" class="action-btn action-activities">
+                📋 Ver Actividades
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

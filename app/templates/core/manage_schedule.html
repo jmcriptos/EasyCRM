@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if contact %}
+    Horarios - {{ contact.first_name }} {{ contact.last_name }}
+  {% else %}
+    Horarios - {{ organisation.name }}
+  {% endif %}
+{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .schedule-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .form-header h1 {
+        color: #4a5568;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .form-header p {
+        color: #718096;
+        font-size: 1.1em;
+    }
+    
+    .schedule-form {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .days-section, .time-section, .lunch-section, .notes-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .days-section h3, .time-section h3, .lunch-section h3, .notes-section h3 {
+        color: #4a5568;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .days-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .day-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .day-checkbox:hover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .day-checkbox input[type="checkbox"]:checked + span {
+        color: #667eea;
+        font-weight: 600;
+    }
+    
+    .day-checkbox input[type="checkbox"]:checked {
+        accent-color: #667eea;
+    }
+    
+    .time-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 15px;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .form-group label {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-group input, .form-group textarea {
+        padding: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.8);
+        color: #4a5568;
+    }
+    
+    .form-group input:focus, .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+    }
+    
+    .form-group small {
+        color: #718096;
+        font-size: 0.85em;
+        margin-top: 5px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .cancel-btn, .submit-btn {
+        padding: 15px 30px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    
+    .cancel-btn {
+        background: #e2e8f0;
+        color: #64748b;
+    }
+    
+    .cancel-btn:hover {
+        background: #cbd5e0;
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: #4a5568;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .visits-link {
+        text-align: center;
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(248, 250, 252, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .visits-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+    
+    .visits-link a:hover {
+        text-decoration: underline;
+    }
+    
+    .visits-link small {
+        color: #718096;
+        display: block;
+        margin-top: 8px;
+    }
+    
+    .error-message {
+        color: #e53e3e;
+        font-size: 0.85em;
+        margin-top: 5px;
+    }
+    
+    @media (max-width: 768px) {
+        .schedule-container {
+            padding: 15px;
+        }
+        
+        .form-header, .schedule-form {
+            padding: 20px;
+        }
+        
+        .time-inputs {
+            grid-template-columns: 1fr;
+        }
+        
+        .days-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="schedule-container">
+    <div class="form-header">
+        <h1>⏰ Horarios de Recepción de Pedidos</h1>
+        {% if contact %}
+            <p>Configurar horarios para: <strong>{{ contact.first_name }} {{ contact.last_name }}</strong></p>
+        {% else %}
+            <p>Configurar horarios para: <strong>{{ organisation.name }}</strong></p>
+        {% endif %}
+    </div>
+    
+    <form method="post" class="schedule-form">
+        <!-- Días de la semana -->
+        <div class="days-section">
+            <h3>📅 Días Disponibles para Recepción</h3>
+            <div class="days-grid">
+                {% for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
+                <label class="day-checkbox">
+                    {{ form[day] }}
+                    <span>{{ form[day].label.text }}</span>
+                </label>
+                {% if form[day].errors %}
+                    {% for error in form[day].errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Horarios -->
+        <div class="time-section">
+            <h3>🕐 Horarios de Atención</h3>
+            <div class="time-inputs">
+                <div class="form-group">
+                    {{ form.start_time.label }}
+                    {{ form.start_time }}
+                    {% if form.start_time.errors %}
+                        {% for error in form.start_time.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.end_time.label }}
+                    {{ form.end_time }}
+                    {% if form.end_time.errors %}
+                        {% for error in form.end_time.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Break de almuerzo -->
+        <div class="lunch-section">
+            <h3>🍽️ Pausa de Almuerzo (Opcional)</h3>
+            <div class="time-inputs">
+                <div class="form-group">
+                    {{ form.lunch_break_start.label }}
+                    {{ form.lunch_break_start }}
+                    {% if form.lunch_break_start.errors %}
+                        {% for error in form.lunch_break_start.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.lunch_break_end.label }}
+                    {{ form.lunch_break_end }}
+                    {% if form.lunch_break_end.errors %}
+                        {% for error in form.lunch_break_end.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notas -->
+        <div class="notes-section">
+            <div class="form-group">
+                {{ form.notes.label }}
+                {{ form.notes }}
+                <small>{{ form.notes.description }}</small>
+                {% if form.notes.errors %}
+                    {% for error in form.notes.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Botones -->
+        <div class="action-buttons">
+            {% if contact %}
+                <a href="{{ url_for('core.view_contact', con_id=contact.id) }}" class="cancel-btn">Cancelar</a>
+            {% else %}
+                <a href="{{ url_for('core.view_organisation', org_id=organisation.id) }}" class="cancel-btn">Cancelar</a>
+            {% endif %}
+            <button type="submit" class="submit-btn">Guardar Horarios</button>
+        </div>
+    </form>
+    
+    <!-- Link a gestión de visitas -->
+    {% if schedule %}
+    <div class="visits-link">
+        <p>📋 <a href="{{ url_for('core.list_visit_schedules', schedule_id=schedule.id) }}">
+            Gestionar Visitas Programadas
+        </a></p>
+        <small>Configure días específicos de visita comercial (semanal, quincenal, mensual)</small>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
